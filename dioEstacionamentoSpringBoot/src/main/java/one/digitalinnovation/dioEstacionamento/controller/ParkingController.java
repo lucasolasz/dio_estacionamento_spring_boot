@@ -18,6 +18,8 @@ import one.digitalinnovation.dioEstacionamento.controller.dto.ParkingDTO;
 import one.digitalinnovation.dioEstacionamento.controller.mapper.ParkingMapper;
 import one.digitalinnovation.dioEstacionamento.model.Parking;
 import one.digitalinnovation.dioEstacionamento.service.ParkingService;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/parking")
@@ -68,6 +70,30 @@ public class ParkingController {
 		ParkingDTO result = parkingMapper.toParkingDTO(parking);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(result);
+		
+	}
+        
+        @PutMapping("/{id}")
+        @Operation(summary = "Update the parking record", 
+            description = "Provides update for the parking")  
+	public ResponseEntity<ParkingDTO> update(@PathVariable String id, @RequestBody ParkingCreateDTO dto){
+		
+		var parkingCreate = parkingMapper.toParkingCreate(dto);
+		Parking parking = parkingService.update(id, parkingCreate);
+		ParkingDTO result = parkingMapper.toParkingDTO(parking);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(result);
+		
+	}
+        
+        @DeleteMapping("/{id}")
+        @Operation(summary = "Delete Vehicle", 
+            description = "Provides release the vacancies")  
+	public ResponseEntity delete(@PathVariable String id){
+		
+		parkingService.delete(id);
+				
+		return ResponseEntity.noContent().build();
 		
 	}
 	
